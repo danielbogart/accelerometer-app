@@ -3,60 +3,78 @@
   <head>
     <title>Acceleration Example</title>
 
-    <script type="text/javascript" charset="utf-8" src="phonegap.js"></script>
     <script type="text/javascript" charset="utf-8">
+      
+        init();
 
-    // The watch id references the current `watchAcceleration`
-    var watchID = null;
-
-    // Wait for PhoneGap to load
-    //
-    document.addEventListener("deviceready", onDeviceReady, false);
-
-    // PhoneGap is ready
-    //
-    function onDeviceReady() {
-        startWatch();
-    }
-
-    // Start watching the acceleration
-    //
-    function startWatch() {
-
-        // Update acceleration every 3 seconds
-        var options = { frequency: 3000 };
-
-        watchID = navigator.accelerometer.watchAcceleration(onSuccess, onError, options);
-    }
-
-    // Stop watching the acceleration
-    //
-    function stopWatch() {
-        if (watchID) {
-            navigator.accelerometer.clearWatch(watchID);
-            watchID = null;
+        
+        function init() {
+          if ((window.DeviceMotionEvent) || ('listenForDeviceMovement' in window)) {
+            window.addEventListener('devicemotion', deviceMotionHandler, false);
+          } else {
+            document.getElementById("dmEvent").innerHTML = "Not supported on your device or browser.  Sorry."
+          }
         }
-    }
+        
+        function deviceMotionHandler(eventData) {
+          var info, xyz = "[X, Y, Z]";
 
-    // onSuccess: Get a snapshot of the current acceleration
-    //
-    function onSuccess(acceleration) {
-        var element = document.getElementById('accelerometer');
-        element.innerHTML = 'Acceleration X: ' + acceleration.x + '<br />' +
-                            'Acceleration Y: ' + acceleration.y + '<br />' +
-                            'Acceleration Z: ' + acceleration.z + '<br />' +
-                            'Timestamp: '      + acceleration.timestamp + '<br />';
-    }
+          // Grab the acceleration including gravity from the results
+          var acceleration = eventData.acceleration;
+          info = xyz.replace("X", round(acceleration.x));
+          info = info.replace("Y", round(acceleration.y));
+          info = info.replace("Z", round(acceleration.z));
+          document.getElementById("moAccel").innerHTML = info;
 
-    // onError: Failed to get the acceleration
-    //
-    function onError() {
-        alert('onError!');
-    }
+          // Grab the acceleration including gravity from the results
+          acceleration = eventData.accelerationIncludingGravity;
+          info = xyz.replace("X", round(acceleration.x));
+          info = info.replace("Y", round(acceleration.y));
+          info = info.replace("Z", round(acceleration.z));
+          document.getElementById("moAccelGrav").innerHTML = info;
 
-    </script>
+          // Grab the acceleration including gravity from the results
+          var rotation = eventData.rotationRate;
+          info = xyz.replace("X", round(rotation.alpha));
+          info = info.replace("Y", round(rotation.beta));
+          info = info.replace("Z", round(rotation.gamma));
+          document.getElementById("moRotation").innerHTML = info;
+
+          info = eventData.interval;
+          document.getElementById("moInterval").innerHTML = info;
+        }
+
+        function round(val) {
+          var amt = 10;
+          return Math.round(val * amt) /  amt;
+        }
+   </script>
   </head>
   <body>
-    <div id="accelerometer">Waiting for accelerometer...</div>
+    <div class="main">
+      <h2>Device Motion</h2>
+      <table>
+        <tr>
+          <td>Event Supported</td>
+          <td id="dmEvent"></td>
+        </tr>
+        <tr>
+          <td>acceleration</td>
+          <td id="moAccel"></td>
+        </tr>
+        <tr>
+          <td>accelerationIncludingGravity</td>
+          <td id="moAccelGrav"></td>
+        </tr>
+        <tr>
+          <td>rotationRate</td>
+          <td id="moRotation"></td>
+        </tr>
+        <tr>
+          <td>interval</td>
+          <td id="moInterval"></td>
+        </tr>
+      </table>
+    </div>
   </body>
 </html>
