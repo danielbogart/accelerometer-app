@@ -32,6 +32,11 @@ $(document).ready(function(){
 		  return false;
 		}
 
+		if (winnerHeader.hasChildNodes()) {
+			removeOptions();
+			removeWinnerHeader();   
+		}
+
 		var q = $('#restaurant').val();
 
 		restaurants.push(q);
@@ -61,6 +66,7 @@ $(document).ready(function(){
 
 		var audio = new Audio('mk.mp3');
 		audio.play();
+		$('#clear').addClass('hide');
 
 		//loop removes one option at a time
 		function removeLoop() {
@@ -71,19 +77,26 @@ $(document).ready(function(){
 
 				  	console.log(restaurants.length);
 
-			 		list.removeChild(list.childNodes[loser])
+				  	$('#list').children().eq([loser]).addClass('animated rollOut').on(
+					    "webkitAnimationEnd oanimationend msAnimationEnd animationend",
+					    function() {
+					        list.removeChild(list.childNodes[loser]);
+					    }
+					);
+			 						 	
 				 	restaurants.splice(loser, 1);
 				 	//recursively called
 				 	removeLoop();				 	
 				}
 				else {
 					removeWinnerHeader();
-					$('#winnerHeader').append('<h1>GO EAT SOME FUCKING '+restaurants[0].toUpperCase());
+					$('#winnerHeader').append('<h1 class="animated flash">GO EAT SOME FUCKING '+restaurants[0].toUpperCase());
 					audio.pause();
 					fatality = new Audio('fatality.mp3');
 					fatality.play();
+					$('#clear').removeClass('hide');
 				}
-		 	}, 3000);			
+		 	}, 2500);			
 	 	};
 
 		removeLoop(); 
