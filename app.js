@@ -49,13 +49,29 @@ $(document).ready(function(){
 		  return false;
 		}
 
-	 	var winner = restaurants[Math.floor(Math.random()*restaurants.length)];
-	  
-		while (winnerHeader.hasChildNodes()) {
-			winnerHeader.removeChild(winnerHeader.lastChild);
-		};   
+		//loop removes one option at a time
+		function removeLoop() {
+			setTimeout(function() { 
+				if (restaurants.length > 1) {
+				 	var loser = Math.floor(Math.random()*restaurants.length);
 
-	  	$('#winnerHeader').append('<h1>Winner: '+winner+'</h1>');
+				  	console.log(restaurants.length);
+
+			 		list.removeChild(list.childNodes[loser])
+				 	restaurants.splice(loser, 1);
+				 	//recursively called
+				 	removeLoop();				 	
+				}
+				else {
+					$('#winnerHeader').append('<h1>GO EAT SOME FUCKING '+restaurants[0].toUpperCase());
+				}
+		 	}, 1000);
+
+	 	};
+
+		removeLoop(); 
+
+	  	
 
 	});
 
