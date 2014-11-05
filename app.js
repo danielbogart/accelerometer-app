@@ -42,7 +42,7 @@ $(document).ready(function(){
 
 		restaurants.push(q);
 
-		$('#list').append('<div>'+q+'</div>');
+		$('#list').append('<div class="listItemStyle">'+q+'</div>');
 		$('#restaurant').val('');
 
 		console.log(restaurants);
@@ -76,9 +76,10 @@ $(document).ready(function(){
 				if (restaurants.length > 1) {
 				 	var loser = Math.floor(Math.random()*restaurants.length);
 
-				  	console.log(restaurants.length);
+				  	animationArray = ['animated rollOut', 'animated bounceOutUp', 'animated fadeOut', 'animated fadeOutDownBig', 'animated lightSpeedOut']
+				  	myAnimation = animationArray[Math.floor(Math.random()*animationArray.length)];
 
-				  	$('#list').children().eq([loser]).addClass('animated rollOut').on(
+				  	$('#list').children().eq([loser]).addClass(myAnimation).on(
 					    "webkitAnimationEnd oanimationend msAnimationEnd animationend",
 					    function() {
 					        list.removeChild(list.childNodes[loser]);
