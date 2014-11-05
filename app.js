@@ -1,86 +1,106 @@
 $(document).ready(function(){
-    
-    var restaurants = [];
+	
+	var restaurants = [];
 
-    //submit button on enter
-    $('.container').keypress(function(e){
-        if(e.which == 13){
-        //Enter key pressed
-            $('#submit').click();
-            //Trigger submit button click event
-        }
-    });
+	//submit button on enter
+	$('.container').keypress(function(e){
+		if(e.which == 13){
+		//Enter key pressed
+			$('#submit').click();
+			//Trigger submit button click event
+		}
+	});
 
-    //submit button function
-    $('#submit').click(function(){
-        var q = $('#restaurant').val();
+	//submit button function
+	$('#submit').click(function(){
+		if ($.trim($("#restaurant").val()) === "") {
+		  alert('enter a restaurant name');
+		  return false;
+		}
 
-        restaurants.push(q);
+		var q = $('#restaurant').val();
 
-        $('#list').append('<div>'+q+'</div>');
-        $('#restaurant').val('');
+		restaurants.push(q);
 
-        console.log(restaurants);
-    });
+		$('#list').append('<div>'+q+'</div>');
+		$('#restaurant').val('');
 
-    //clear button function
-    $('#clear').click(function(){
+		console.log(restaurants);
+	});
 
-        while (list.hasChildNodes()) {
-            list.removeChild(list.lastChild);
-        };   
-        restaurants = [];
-    });
+	//clear button function
+	$('#clear').click(function(){
 
-    //game on button function
-    $('#gameOn').click(function(){
+		while (list.hasChildNodes()) {
+			list.removeChild(list.lastChild);
+		};
+		while (winnerHeader.hasChildNodes()) {
+			winnerHeader.removeChild(winnerHeader.lastChild);
+		};      
+
+		restaurants = [];
+	});
+
+	//game on button function
+	$('#gameOn').click(function(){
+
+		if (restaurants.length == 0){
+		  alert('enter a restaurant name');
+		  return false;
+		}
+
+	 	var winner = restaurants[Math.floor(Math.random()*restaurants.length)];
+	  
+		while (winnerHeader.hasChildNodes()) {
+			winnerHeader.removeChild(winnerHeader.lastChild);
+		};   
+
+	  	$('#winnerHeader').append('<h1>Winner: '+winner+'</h1>');
+
+	});
 
 
-    });
 
+	init();
+	
+	function init() {
+	  if ((window.DeviceMotionEvent) || ('listenForDeviceMovement' in window)) {
+		window.addEventListener('devicemotion', deviceMotionHandler, false);
+	  } else {
+		document.getElementById("dmEvent").innerHTML = "Not supported on your device or browser.  Sorry."
+	  }
+	}
+	
+	function deviceMotionHandler(eventData) {
+	  var info, xyz = "[X, Y, Z]";
 
+	  // Grab the acceleration including gravity from the results
+	  var acceleration = eventData.acceleration;
+	  info = xyz.replace("X", round(acceleration.x));
+	  info = info.replace("Y", round(acceleration.y));
+	  info = info.replace("Z", round(acceleration.z));
+	  // document.getElementById("moAccel").innerHTML = info;
 
+	  // Grab the acceleration including gravity from the results
+	  acceleration = eventData.accelerationIncludingGravity;
+	  info = xyz.replace("X", round(acceleration.x));
+	  info = info.replace("Y", round(acceleration.y));
+	  info = info.replace("Z", round(acceleration.z));
+	  // document.getElementById("moAccelGrav").innerHTML = info;
 
-    init();
-    
-    function init() {
-      if ((window.DeviceMotionEvent) || ('listenForDeviceMovement' in window)) {
-        window.addEventListener('devicemotion', deviceMotionHandler, false);
-      } else {
-        document.getElementById("dmEvent").innerHTML = "Not supported on your device or browser.  Sorry."
-      }
-    }
-    
-    function deviceMotionHandler(eventData) {
-      var info, xyz = "[X, Y, Z]";
+	  // Grab the acceleration including gravity from the results
+	  var rotation = eventData.rotationRate;
+	  info = xyz.replace("X", round(rotation.alpha));
+	  info = info.replace("Y", round(rotation.beta));
+	  info = info.replace("Z", round(rotation.gamma));
+	  // document.getElementById("moRotation").innerHTML = info;
 
-      // Grab the acceleration including gravity from the results
-      var acceleration = eventData.acceleration;
-      info = xyz.replace("X", round(acceleration.x));
-      info = info.replace("Y", round(acceleration.y));
-      info = info.replace("Z", round(acceleration.z));
-      // document.getElementById("moAccel").innerHTML = info;
+	  info = eventData.interval;
+	  // document.getElementById("moInterval").innerHTML = info;
+	}
 
-      // Grab the acceleration including gravity from the results
-      acceleration = eventData.accelerationIncludingGravity;
-      info = xyz.replace("X", round(acceleration.x));
-      info = info.replace("Y", round(acceleration.y));
-      info = info.replace("Z", round(acceleration.z));
-      // document.getElementById("moAccelGrav").innerHTML = info;
-
-      // Grab the acceleration including gravity from the results
-      var rotation = eventData.rotationRate;
-      info = xyz.replace("X", round(rotation.alpha));
-      info = info.replace("Y", round(rotation.beta));
-      info = info.replace("Z", round(rotation.gamma));
-      // document.getElementById("moRotation").innerHTML = info;
-
-      info = eventData.interval;
-      // document.getElementById("moInterval").innerHTML = info;
-    }
-
-    function round(val) {
-      var amt = 10;
-      return Math.round(val * amt) /  amt;
-    }
+	function round(val) {
+	  var amt = 10;
+	  return Math.round(val * amt) /  amt;
+	}
 });
