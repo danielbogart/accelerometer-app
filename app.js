@@ -33,6 +33,7 @@ $(document).ready(function(){
 		}
 
 		if (winnerHeader.hasChildNodes()) {
+			restaurants = [];
 			removeOptions();
 			removeWinnerHeader();   
 		}
