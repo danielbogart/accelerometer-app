@@ -2,6 +2,20 @@ $(document).ready(function(){
 	
 	var restaurants = [];
 
+	//remove winner
+	var removeWinnerHeader = function(){
+		while (winnerHeader.hasChildNodes()) {
+			winnerHeader.removeChild(winnerHeader.lastChild);
+		};   
+	};
+
+	//remove restaurant list options
+	var removeOptions = function(){
+		while (list.hasChildNodes()) {
+			list.removeChild(list.lastChild);
+		};
+	};
+
 	//submit button on enter
 	$('.container').keypress(function(e){
 		if(e.which == 13){
@@ -31,12 +45,8 @@ $(document).ready(function(){
 	//clear button function
 	$('#clear').click(function(){
 
-		while (list.hasChildNodes()) {
-			list.removeChild(list.lastChild);
-		};
-		while (winnerHeader.hasChildNodes()) {
-			winnerHeader.removeChild(winnerHeader.lastChild);
-		};      
+		removeOptions();
+		removeWinnerHeader();   
 
 		restaurants = [];
 	});
@@ -44,13 +54,17 @@ $(document).ready(function(){
 	//game on button function
 	$('#gameOn').click(function(){
 
-		if (restaurants.length == 0){
-		  alert('enter a restaurant name');
+		if (restaurants.length <= 1){
+		  alert('enter at least two restaurant names');
 		  return false;
 		}
 
+		var audio = new Audio('mk.mp3');
+		audio.play();
+
 		//loop removes one option at a time
 		function removeLoop() {
+
 			setTimeout(function() { 
 				if (restaurants.length > 1) {
 				 	var loser = Math.floor(Math.random()*restaurants.length);
@@ -63,10 +77,13 @@ $(document).ready(function(){
 				 	removeLoop();				 	
 				}
 				else {
+					removeWinnerHeader();
 					$('#winnerHeader').append('<h1>GO EAT SOME FUCKING '+restaurants[0].toUpperCase());
+					audio.pause();
+					fatality = new Audio('fatality.mp3');
+					fatality.play();
 				}
-		 	}, 1000);
-
+		 	}, 3000);			
 	 	};
 
 		removeLoop(); 
